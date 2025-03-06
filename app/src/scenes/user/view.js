@@ -7,7 +7,7 @@ import Loader from "../../components/loader";
 import LoadingButton from "../../components/loadingButton";
 import api from "../../services/api";
 
-export default () => {
+const UserView = () => {
   const [user, setUser] = useState(null);
   const { id } = useParams();
   useEffect(() => {
@@ -39,18 +39,18 @@ const Detail = ({ user }) => {
     history.push(`/user`);
   }
 
+  const onSubmit = async (values) => {
+    try {
+      await api.put(`/user/${user._id}`, values);
+      toast.success("Updated!");
+    } catch (e) {
+      console.log(e);
+      toast.error("Some Error!");
+    }
+  };
+
   return (
-    <Formik
-      initialValues={user}
-      onSubmit={async (values) => {
-        try {
-          await api.put(`/user/${user._id}`, values);
-          toast.success("Updated!");
-        } catch (e) {
-          console.log(e);
-          toast.error("Some Error!");
-        }
-      }}>
+    <Formik initialValues={user} onSubmit={onSubmit}>
       {({ values, handleChange, handleSubmit, isSubmitting }) => {
         return (
           <React.Fragment>
@@ -132,7 +132,7 @@ const Detail = ({ user }) => {
             </div>
 
             <div className="flex  mt-2">
-              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onChange={handleSubmit}>
+              <LoadingButton className="bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" loading={isSubmitting} onClick={handleSubmit}>
                 Update
               </LoadingButton>
               <button className="ml-[10px] bg-[#F43F5E] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]" onClick={deleteData}>
@@ -145,3 +145,5 @@ const Detail = ({ user }) => {
     </Formik>
   );
 };
+
+export default UserView;

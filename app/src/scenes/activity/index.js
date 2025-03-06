@@ -110,6 +110,12 @@ const Activities = ({ date, user, project }) => {
     setActivities(n);
   }
 
+  function onUpdateVacation(i, j, value) {
+    const n = [...activities];
+    n[i].detail[j].vacation = value;
+    setActivities(n);
+  }
+
   function onUpdateComment(i, value) {
     const n = [...activities];
     n[i].comment = value;
@@ -222,6 +228,23 @@ const Activities = ({ date, user, project }) => {
                       </React.Fragment>
                     );
                   })}
+                  <tr className="border-t border-b border-r border-[#E5EAEF]">
+                    <th className="px-2">
+                      <div className="flex justify-end w-full text-[12px] font-bold text-[#212325] italic">
+                        <div>Vacations</div>
+                      </div>
+                    </th>
+                    {activities.map((e, i) => {
+                      return e.detail.map((f, j) => {
+                        console.log(!!f.vacation);
+                        return (
+                          <th className={`border border-[#E5EAEF] py-[6px]`} key={f._id}>
+                            <input type="checkbox" checked={!!f.vacation} onChange={(e) => onUpdateVacation(i, j, e.target.checked)} />
+                          </th>
+                        );
+                      });
+                    })}
+                  </tr>
                   <tr>
                     <th className="w-[50px] text-[12px] text-[#212325] px-[10px] py-2">
                       <SelectProject disabled={activities.map((e) => e.project)} value="" onChange={(e) => onAddActivities(e)} />
@@ -252,6 +275,8 @@ const Field = ({ value = 0, onChange, invoiced, ...rest }) => {
     bgColor = "bg-[#40C463]";
   } else if (value > 0) {
     bgColor = "bg-[#9BE9A8]";
+  } else if (value === "c") {
+    bgColor = "bg-red";
   } else {
     textColor = "text-[#aaa]";
   }
